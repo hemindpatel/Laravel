@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::group(['prefix' => 'post'], function () {
+    Route::get('view', 'Controller@viewPost');
+    Route::post('add', 'Controller@SavePost')->name('post.add');
+});
