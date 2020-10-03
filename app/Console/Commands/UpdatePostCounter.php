@@ -12,7 +12,7 @@ class UpdatePostCounter extends Command
      *
      * @var string
      */
-    protected $signature = 'post:update_post_counter';
+    protected $signature = 'post:update_post_counter {id=1}';
 
     /**
      * The console command description.
@@ -38,7 +38,7 @@ class UpdatePostCounter extends Command
      */
     public function handle()
     {
-        $post = Post::findOrFail(1);
+        $post = Post::findOrFail($this->argument('id'));
         if($post){
             $counter = $post->count;
             $post->count = $counter + 1;
