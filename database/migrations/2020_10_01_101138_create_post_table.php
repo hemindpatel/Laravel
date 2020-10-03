@@ -18,6 +18,7 @@ class CreatePostTable extends Migration
             $table->integer('user_id');
             $table->string('key_name');
             $table->string('key_value');
+            $table->bigInteger('count')->default(1);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

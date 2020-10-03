@@ -31,8 +31,9 @@ class Controller extends BaseController
      * Use : This function used to save post data
      */
     public function SavePost(StoreBlogPost  $request){
-        $validator = $request->validated();
-        /*$validator = Validator::make($request->all(), [
+        // custom validator using Request class
+        //$validator = $request->validated();
+        $validator = Validator::make($request->all(), [
             'key_name' => 'required|string',
             'key_value' => 'required|string',
             'user_id' => 'required',
@@ -48,6 +49,7 @@ class Controller extends BaseController
             $post = new Post();
             $post->key_name = $request->get('key_name');
             $post->key_value = $request->get('key_value');
+            $post->user_id = $request->get('user_id');
 
             if($post->save()){
                 $success['message'] = "Post added successfully..";
@@ -56,7 +58,7 @@ class Controller extends BaseController
                 $success['message'] = "Sorry! Post is not successfully.";
             }
             return response()->json($success);
-        }*/
+        }
     }
 
     /**
