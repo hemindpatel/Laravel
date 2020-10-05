@@ -35,11 +35,32 @@ class Post extends Model
 
     protected $with = ['user'];
 
+    public function scopeGetPostData($query){
+        return $query->where('id', '<', 3);
+    }
+
+    public function scopeGetDynamicPostData($query, $id){
+        return $query->where('id', $id);
+    }
+
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      * Use : relationship handle
      */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public static function getPost($data){
+        if(isset($data) && isset($data['id']) && $data['id']){
+            $post = self::getDynamicPostData($data['id'])->get();
+            if(!$post) {
+                return false;
+            }
+        } else {
+            $post = self::getPostData()->orderBy('id', 'desc')->get();
+        }
+        return $post;
     }
 }

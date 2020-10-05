@@ -55,9 +55,49 @@ class Controller extends BaseController
                 $success['message'] = "Post added successfully..";
             }
             else {
-                $success['message'] = "Sorry! Post is not successfully.";
+                $success['message'] = "Sorry! Post is not added successfully.";
             }
             return response()->json($success);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * Use : get all post data or id vise get post data
+     */
+    public function getPost(Request $request){
+        $post = Post::getPost($request->all());
+        if($post) {
+            $data = formatJson('Get post data successfully', true, $post);
+        } else {
+            $data = formatJson('Something wrong during get post data');
+        }
+        return response()->json($data);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * Use : used to stored user data
+     */
+    public function addUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'password' => 'required|string',
+            'address' => 'required|string'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages());
+        } else {
+            $data = User::addUser($request->all());
+            if($data){
+                return response()->json(array('message' => "User data save successfully."));
+            } else {
+                return response()->json(array('message' => "Failed! something issue raised."));
+            }
         }
     }
 
@@ -88,31 +128,6 @@ class Controller extends BaseController
             $data = Agent::addAgent($request->all());
             if($data){
                 return response()->json(array('message' => "Agent data save successfully."));
-            } else {
-                return response()->json(array('message' => "Failed! something issue raised."));
-            }
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * Use : used to stored user data
-     */
-    public function addUser(Request $request){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'password' => 'required|string',
-            'address' => 'required|string'
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->messages());
-        } else {
-            $data = User::addUser($request->all());
-            if($data){
-                return response()->json(array('message' => "User data save successfully."));
             } else {
                 return response()->json(array('message' => "Failed! something issue raised."));
             }

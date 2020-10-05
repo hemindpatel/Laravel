@@ -32,6 +32,7 @@ Route::group([ 'prefix' => 'auth'], function (){
 Route::group(['prefix' => 'post'], function (){
    /*Route::get('view', 'Controller@viewPost');
     Route::post('add', 'Controller@SavePost')->name('post.add');*/
+    Route::post('get', 'Controller@getPost');
     Route::get('scout', 'Controller@getUser');
     Route::get('eager', function(){
         return response()->json(\App\Post::find(1)->user);
