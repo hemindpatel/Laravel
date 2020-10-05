@@ -11,3 +11,5 @@
 - Again open up one more editor and if you want to edit commit message then replace first commit message and save using most recent above instruction.
 - push on the branch
 
+### update most recent commit message
+- Run `git commit --amend -m "your message"`
