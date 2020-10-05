@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Laravel\Scout\Searchable;
+use App\Post;
+use App\Scope\PostCountScope;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,12 +34,19 @@ Route::group([ 'prefix' => 'auth'], function (){
 Route::group(['prefix' => 'post'], function (){
    /*Route::get('view', 'Controller@viewPost');
     Route::post('add', 'Controller@SavePost')->name('post.add');*/
-    Route::post('get', 'Controller@getPost');
     Route::get('scout', 'Controller@getUser');
     Route::get('eager', function(){
-        return response()->json(\App\Post::find(1)->user);
-        //return response()->json(\App\Post::with('user')->get());
-        //return response()->json(\App\Post::with('user:id,name')->get());
+        return response()->json(Post::find(1)->user);
+        //return response()->json(Post::with('user')->get());
+        //return response()->json(Post::with('user:id,name')->get());
+    });
+
+    Route::post('get', 'Controller@getPost');
+    Route::post('global/scope/get', function (){
+        return response()->json(Post::select('*')->get());
+    });
+    Route::post('without/global/scope/get', function(){
+        return response()->json(Post::select('*')->withoutGlobalScope(PostCountScope::class)->get());
     });
 });
 

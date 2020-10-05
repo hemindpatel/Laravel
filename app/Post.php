@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scope\PostCountScope;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
@@ -14,6 +15,12 @@ class Post extends Model
     protected $fillable = [
         'key_name', 'key_value', 'user_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new PostCountScope());
+    }
 
     public function searchableAs()
     {
@@ -54,12 +61,12 @@ class Post extends Model
 
     public static function getPost($data){
         if(isset($data) && isset($data['id']) && $data['id']){
-            $post = self::getDynamicPostData($data['id'])->get();
+            $post = self::getDynamicPostData($data['id'])->withoutGlobalScope(PostCountScope::class)->get();
             if(!$post) {
                 return false;
             }
         } else {
-            $post = self::getPostData()->orderBy('id', 'desc')->get();
+            $post = self::getPostData()->withoutGlobalScope(PostCountScope::class)->orderBy('id', 'desc')->get();
         }
         return $post;
     }
