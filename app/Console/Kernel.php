@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\UpdatePostCounter;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,6 +30,10 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->command('command:update_post_counter')
             ->everyMinute();
+
+        $schedule->call(function(){
+           DB::statement('update post set count="1"');
+        })->everyMinute();
     }
 
     /**
