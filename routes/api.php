@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Laravel\Scout\Searchable;
 use App\Post;
 use App\Scope\PostCountScope;
+use App\Http\Resources\PostCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +17,7 @@ use App\Scope\PostCountScope;
 |
 */
 
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
+// Passport Authentication
 Route::group([ 'prefix' => 'auth'], function (){ 
     Route::group(['middleware' => ['guest:api']], function () {
         Route::post('login', 'API\AuthController@login');
@@ -32,16 +30,29 @@ Route::group([ 'prefix' => 'auth'], function (){
 });
 
 Route::group(['prefix' => 'post'], function (){
-   /*Route::get('view', 'Controller@viewPost');
-    Route::post('add', 'Controller@SavePost')->name('post.add');*/
+    // Get Post Data
+    Route::post('get', 'Controller@getPost');
+
+    // API Resource Collection
+    /*Route::post('get', function(){
+        return new PostCollection(Post::all());
+        //return PostCollection::collection(Post::all());
+    });*/
+
+    // Scout
     Route::get('scout', 'Controller@getUser');
+
+    // Eager Loading
     Route::get('eager', function(){
         return response()->json(Post::find(1)->user);
         //return response()->json(Post::with('user')->get());
         //return response()->json(Post::with('user:id,name')->get());
     });
 
-    Route::post('get', 'Controller@getPost');
+    // Debug Bar
+    Route::get('index', 'Controller@index');
+
+    // Scope Route
     Route::post('global/scope/get', function (){
         return response()->json(Post::select('*')->get());
     });
@@ -50,6 +61,7 @@ Route::group(['prefix' => 'post'], function (){
     });
 });
 
+//Eloquent Morph Relation Ship
 Route::group(['prefix' => 'morph/example'], function (){
     Route::post('agent', 'Controller@addAgent');
     Route::post('user', 'Controller@addUser');
